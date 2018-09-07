@@ -7,7 +7,8 @@ const logSymbols = require('log-symbols');
 
 const listOfArgs = process.argv;
 const filePath = listOfArgs[2];
-const validate = listOfArgs[3];
+let validate = listOfArgs[3];
+let stats = listOfArgs[4];
 
 const filterLinks = array => {
   let links = false;
@@ -53,21 +54,49 @@ const mdLinks = absolutePath => {
 };
 
 const checkStatus = linksArray => {
+  const options = {};
+  if (validate === undefined) {
+    options.validate = false;
+  } else if (validate.indexOf('--validate') !== -1) {
+    options.validate = true;
+  }
+  if (stats === undefined) {
+    options.stats = false;
+  } else if (stats.indexOf('--stats') !== -1) {
+    options.stats = true;
+  }
+  let unique = 0;
+  let broken = 0;
+  let total = linksArray.length;
+
   linksArray.forEach(link => {
-    if (validate === '--validate') {
-      fetch(link.href).then(response => {
+    fetch(link.href)
+      .then(response => {
+        let result = '';
         link.status = response.status;
-        if (link.status === 200) {
-          console.log('*Archivo:'.underline, link.file, '||', 'Texto: '.underline, link.text, '||', 'Enlace:'.underline, link.href, '||', `Estatus: ${link.status}`.underline.green, logSymbols.success);
+        if (options.validate) {
+          if (link.status === 200) {
+            result = `${colors.underline('Archivo:')} ${link.file} || ${colors.underline('Texto:')} ${link.text} || ${colors.underline('Enlace:')} ${link.href} || ${colors.green('Estatus:')} ${colors.green(link.status)} ${colors.green(logSymbols.success)}`;
+          } else {
+            result = `${colors.underline('Archivo:')} ${link.file} || ${colors.underline('Texto:')} ${link.text} || ${colors.underline('Enlace:')} ${link.href} || ${colors.red('Estatus:')} ${colors.red(link.status)} ${colors.red(logSymbols.error)}`;
+          }
         } else {
-          console.log('*Archivo:'.underline, link.file, '||', 'Texto: '.underline, link.text, '||', 'Enlace:'.underline, link.href, '||', `Estatus: ${link.status}`.underline.red, logSymbols.error);
+          result = `${colors.underline('Archivo:')} ${link.file} || ${colors.underline('Texto:')} ${link.text} || ${colors.underline('Enlace:')} ${link.href}`;
+        }
+        if (options.stats) {
+          if (link.status === 200) {
+            unique++;
+          } else {
+            broken++;
+          }
+        }
+        console.log(result);
+        if (options.stats) {
+          console.log(`${colors.cyan('STATS: Unique ->')} ${colors.cyan(unique)} || ${colors.cyan('Broken ->')} ${colors.cyan(broken)}`);
         }
       }).catch(error => {
-        console.log('*Archivo:'.underline, link.file, '||', 'Texto: '.underline, link.text, '||', 'Enlace:'.underline, link.href, '||', 'Estatus: Fail'.underline.red, logSymbols.error);
+        console.log(error);
       });
-    } else {
-      console.log('*Archivo:'.underline, link.file, '||', 'Texto: '.underline, link.text, '||', 'Enlace:'.underline, link.href);
-    }
   });
 };
 

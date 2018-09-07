@@ -30,6 +30,8 @@ Para desarrollo de este proyecto se utilizaron las siguientes tecnologías y lib
 3. JavaScript (ES6)
 4. [Bootstrap 4.1](https://getbootstrap.com/)
 5. [Sweet Alert](https://sweetalert2.github.io/)
-6. [Firebase](https://firebase.gle.com/)*
+6. [Firebase](https://firebase.google.com/)*
 
-*Los productos utilizados de firebase son: [Cloud Firestore](https://firebase.google.com/products/firstore/) para almacenar y sincronizar los datos, y [Firebase Authentication](https://firebase.google.com/products/auth/) para la autenficación de usuarios.
+Los productos utilizados de firebase son: 
+[Cloud Firestore](https://firebase.google.com/products/firstore/) 
+[Firebase Authentication](https://firebase.google.com/products/auth/)
