@@ -32,5 +32,5 @@ $ npm i https://github.com/sanrey254/proyecto-8-markdown
 
 ## Uso
 
-![Screen](files\screen.png)
+![Screen](files/screen.png)
 
