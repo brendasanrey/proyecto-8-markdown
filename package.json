@@ -1,6 +1,6 @@
 {
   "name": "markdown-links-status",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Módulo que permite identificar los enlaces de archivos markdown y verificar su estatus",
   "main": "index.js",
   "scripts": {

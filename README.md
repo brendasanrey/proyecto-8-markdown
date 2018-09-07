@@ -18,3 +18,19 @@ Dentro de una comunidad de código abierto, nos han propuesto crear una
 herramienta usando [Node.js](https://nodejs.org/), que lea y analice archivos
 en formato `Markdown`, para verificar los links que contengan y reportar
 algunas estadísticas.
+
+## Instalación
+
+Para integrar el módulo `Markdown-links-status` a tu proyecto utiliza alguna de las siguientes opciones:
+
+```sh
+$ npm i markdown-links-status
+```
+```sh
+$ npm i https://github.com/sanrey254/proyecto-8-markdown
+```
+
+## Uso
+
+![Screen](files/sreen.png)
+
