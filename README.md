@@ -1,5 +1,7 @@
 # Markdown Links
 
+[![dependencies Status](https://david-dm.org/sanrey254/proyecto-8-markdown.svg)](https://david-dm.org/sanrey254/proyecto-8-markdown)
+
 ## Preámbulo
 
 [Markdown](https://es.wikipedia.org/wiki/Markdown) es un lenguaje de marcado

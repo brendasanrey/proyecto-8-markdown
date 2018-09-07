@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/sanrey254/proyecto-8-markdown#readme",
   "dependencies": {
-    "eslint": "^4.19.1",
+    "eslint": ">=5.5.0",
     "ajv": "^6.5.3",
     "colors": "^1.3.2",
     "log-symbols": "^2.2.0",
