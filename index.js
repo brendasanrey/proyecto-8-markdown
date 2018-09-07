@@ -5,7 +5,6 @@ const marked = require('marked');
 const colors = require('colors');
 const logSymbols = require('log-symbols');
 
-const currentDirectory = process.cwd();
 const listOfArgs = process.argv;
 const filePath = listOfArgs[2];
 const validate = listOfArgs[3];
@@ -22,15 +21,14 @@ const filterLinks = array => {
         links.href = line.slice(line.indexOf('http'), line.lastIndexOf(')'));
       }
     }
-  });  
+  });
   return links;
 };
 
-const mdLinks = userPath => {
+const mdLinks = absolutePath => {
   const mdLinksArrays = [];
-  const absolutePath = path.resolve(userPath);
   if (path.extname(absolutePath) === '.md') {
-    fs.readFile(absolutePath, 'utf-8', (error, data) => {
+    fs.readFile(absolutePath, 'utf8', (error, data) => {
       if (error) {
         console.log(error);
       } else {
@@ -46,29 +44,52 @@ const mdLinks = userPath => {
             }
           }
         });
-        checkStatus(mdLinksArrays);
+        checkStatus(mdLinksArrays, absolutePath);
       }
     });
   } else {
-    console.log('Tipo de archivo inválido'); 
+    console.log(logSymbols.warning, ` Archivo analizado Inválido: ${absolutePath}`.red);
   }
 };
 
 const checkStatus = linksArray => {
-  linksArray.forEach(link =>{
+  linksArray.forEach(link => {
     if (validate === '--validate') {
-      fetch(link.href).then(response =>{
+      fetch(link.href).then(response => {
         link.status = response.status;
         if (link.status === 200) {
           console.log('*Archivo:'.underline, link.file, '||', 'Texto: '.underline, link.text, '||', 'Enlace:'.underline, link.href, '||', `Estatus: ${link.status}`.underline.green, logSymbols.success);
         } else {
           console.log('*Archivo:'.underline, link.file, '||', 'Texto: '.underline, link.text, '||', 'Enlace:'.underline, link.href, '||', `Estatus: ${link.status}`.underline.red, logSymbols.error);
         }
+      }).catch(error => {
+        console.log('*Archivo:'.underline, link.file, '||', 'Texto: '.underline, link.text, '||', 'Enlace:'.underline, link.href, '||', 'Estatus: Fail'.underline.red, logSymbols.error);
       });
     } else {
-      console.log('*Archivo:'.underline, link.file, '||', 'Texto: '.underline, link.text, '||', 'Enlace:'.underline, link.href);  
+      console.log('*Archivo:'.underline, link.file, '||', 'Texto: '.underline, link.text, '||', 'Enlace:'.underline, link.href);
     }
   });
 };
 
-mdLinks(filePath);
+const checkPath = filePath => {
+  const absolutePath = path.resolve(filePath);
+  const stats = fs.statSync(absolutePath);
+  const checkFile = stats.isFile();
+  const checkDirectory = stats.isDirectory();
+  if (checkFile) {
+    mdLinks(absolutePath);
+  }
+  if (checkDirectory) {
+    fs.readdir(absolutePath, 'utf8', (error, files) => {
+      if (error) {
+        console.log(error);
+      } else {
+        files.forEach(file => {
+          mdLinks(`${absolutePath}\\${file}`);
+        });
+      }
+    });
+  }
+};
+
+checkPath(filePath);
