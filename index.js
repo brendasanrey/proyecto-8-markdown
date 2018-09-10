@@ -54,6 +54,7 @@ const mdLinks = absolutePath => {
 };
 
 const checkStatus = linksArray => {
+  let arrayLength = linksArray.length;
   const options = {};
   if (validate === undefined) {
     options.validate = false;
@@ -72,6 +73,7 @@ const checkStatus = linksArray => {
   linksArray.forEach(link => {
     fetch(link.href)
       .then(response => {
+        arrayLength--;
         let result = '';
         link.status = response.status;
         if (options.validate) {
@@ -92,7 +94,9 @@ const checkStatus = linksArray => {
         }
         console.log(result);
         if (options.stats) {
-          console.log(`${colors.cyan('STATS: Unique ->')} ${colors.cyan(unique)} || ${colors.cyan('Broken ->')} ${colors.cyan(broken)}`);
+          if (arrayLength === 0) {
+            console.log(`${colors.cyan('STATS: Unique ->')} ${colors.cyan(unique)} || ${colors.cyan('Broken ->')} ${colors.cyan(broken)}`);
+          }
         }
       }).catch(error => {
         console.log(error);
